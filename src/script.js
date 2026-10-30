@@ -209,22 +209,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // === 2. プロフィールリストの生成 ===
     const profileContainer = document.querySelector('#profile-segment .profile-list-new');
     // プロフィールリストもシャッフルして表示
-    const shuffledProfiles = shuffleArray(allProfileData);
-    shuffledProfiles.forEach(profile => {
-        profileContainer.appendChild(createProfileItem(profile));
-    });
+    if (profileContainer) {
+        const shuffledProfiles = shuffleArray(allProfileData);
+        shuffledProfiles.forEach(profile => {
+            profileContainer.appendChild(createProfileItem(profile));
+        });
+    }
 
     // === 3. イベントリスナーの設定 ===
     initializeMusicButtons(); // 個別再生ボタン
     initializeRandomPlayButtons(); // ★ ランダム再生ボタン
     initializeHeaders(); // ★ 開閉ヘッダー
 
-    // モバイル表示 (900px未満) の場合、セグメントを最初から最小化しておく
-    if (window.innerWidth < 900) {
-        document.querySelectorAll('.theme-segment').forEach(segment => {
-            segment.classList.add('minimized');
-        });
-    }
 });
 
 // --- ★ 再生ロジックを共通関数化 (修正) ---
