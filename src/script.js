@@ -1,31 +1,34 @@
 // ===== script.js の新しい全内容 =====
 
 // --- 楽曲データベース ---
+// Category = A は、学祭のテーマに沿った楽曲。
+// Category = B は、自由曲。
 const allMusicData = [
-    // 439K
-    { title: 'OrKstra No.3 "Link"', file: 'src/audio/Link.mp3', artist: '439K', category: 'A', volume: 1.0, jacket: 'src/images/jacket/Link.png' },
-    { title: 'Throw Three', file: 'src/audio/Throw Three.mp3', artist: '439K', category: 'B', volume: 1.0, jacket: 'src/images/jacket/ThrowThree.png' },
-    { title: 'Darts Night', file: 'src/audio/Darts Night.mp3', artist: '439K', category: 'B', volume: 1.0, jacket: 'src/images/jacket/DartsNight.png' },
-    // 昊
-    { title: 'LittleAngel', file: 'src/audio/LittleAngel.mp3', artist: '昊', category: 'B', volume: 1.0, jacket: 'src/images/jacket/LittleAngel.png' },
-    { title: 'みな底の光都', file: 'src/audio/みな底の光都.mp3', artist: '昊', category: 'B', volume: 1.0, jacket: 'src/images/jacket/みな底の光都.png' },
-    { title: 'Oasis', file: 'src/audio/Oasis.mp3', artist: '昊', category: 'B', volume: 1.0, jacket: 'src/images/jacket/Oasis.png' },
-    // あっしー
-    { title: 'Packaged Remix', file: 'src/audio/Packaged Remix.mp3', artist: 'あっしー', category: 'B', volume: 0.5, jacket: 'src/images/jacket/Packaged Remix.png' },
-    { title: 'その景色を行く先は', file: 'src/audio/その景色を行く先は.mp3', artist: 'あっしー', category: 'B', volume: 0.6, jacket: 'src/images/jacket/その景色を行く先は.png' },
     // しゅうへい
-    { title: '霧', file: 'src/audio/霧.mp3', artist: 'しゅうへい', category: 'A', volume: 0.7, jacket: 'src/images/jacket/霧.png' },
-    { title: 'まったりティータイム', file: 'src/audio/まったりティータイム.mp3', artist: 'しゅうへい', category: 'B', volume: 0.7, jacket: 'src/images/jacket/まったりティータイム.png' },
-    // 灘
-    { title: 'nanika', file: 'src/audio/nanika.mp3', artist: '灘', category: 'B', volume: 1.0, jacket: 'src/images/jacket/rd.png' },
-    // よつや
-    { title: 'correct?', file: 'src/audio/correct.mp3', artist: 'よつや', category: 'B', volume: 1.0, jacket: 'src/images/jacket/rd.png' },
-    // SynaPse
-    { title: 'Ready Go!', file: 'src/audio/Ready Go!.mp3', artist: 'SynaPse', category: 'B', volume: 0.5, jacket: 'src/images/jacket/rd.png' },
-    // 界潜
-    { title: '細雪', file: 'src/audio/細雪.mp3', artist: '界潜', category: 'B', volume: 0.4, jacket: 'src/images/jacket/細雪.png' },
-    // セキセイ
-    { title: '何者にもなれなくても', file: 'src/audio/何者にもなれなくても.mp3', artist: 'セキセイ', category: 'B', volume: 0.8, jacket: 'src/images/jacket/何者にもなれなくても.png' }
+    { title: 'おもいでフィルム', file: 'src/audio/2026/おもいでフィルム.mp3', artist: 'しゅうへい', category: 'A', volume: 1.0, jacket: 'src/images/jacket2026/しゅうへい_おもいでフィルム.PNG' },
+    { title: '爆食', file: 'src/audio/2026/爆食.mp3', artist: 'しゅうへい', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/しゅうへい_爆食.PNG' }, 
+
+    // 439K
+    { title: '439K Trinitas', file: 'src/audio/2026/439K_Trinitas.mp3', artist: '439K', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/439K_Trinitas.png' },
+
+    // あっしー
+    { title: 'リミナル feat.音街ウナ', file: 'src/audio/2026/リミナル feat.音街ウナ.mp3', artist: 'midoro', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/あっしー_リミナル.png' },
+
+    // 西谷
+    { title: '暮れなずめ黄昏', file: 'src/audio/2026/GLOSSUM.mp3', artist: 'たにし', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/GLOSSUM.jpeg' },
+
+    // IGC2のしゅうへい
+    { title: 'JumpHero', file: 'src/audio/2026/JumpHero.mp3', artist: 'LegendaryGuitarHero', category: 'A', volume: 1.0, jacket: 'src/images/jacket2026/LegendaryGuitarHero_JumpHero.PNG' }, 
+    { title: 'SeasideJourney', file: 'src/audio/2026/SeasideJourney.mp3', artist: 'LegendaryGuitarHero', category: 'A', volume: 1.0, jacket: 'src/images/jacket2026/LegendaryGuitarHero_SeasideJourney.PNG' }, 
+
+    { title: "Demon's HeartBeat", file: "src/audio/2026/Demon's HeartBeat.mp3", artist: 'DIE-MAOU', category: 'B', volume: 1.0, jacket: "src/images/jacket2026/DIE-MAOU_Demon's HeartBeat.PNG" }, 
+    { title: "I'm On 1 HP", file: "src/audio/2026/I'm On 1 HP.mp3", artist: 'DIE-MAOU', category: 'B', volume: 1.0, jacket: "src/images/jacket2026/DIE-MAOU_I'm On 1 HP.PNG" }, 
+
+    { title: 'Inflict Infinity Damage!!!', file: 'src/audio/2026/Inflict Infinity Damage!!!.mp3', artist: '8×million bit', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/8×million bit_Inflict Infinity Damage!!!.PNG' }, 
+    { title: 'Lovely Invader<3', file: 'src/audio/2026/Lovely Invader.mp3', artist: '8×million bit', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/8×million bit_Lovely Invader_3.PNG' }, 
+
+    { title: 'Set My Sites On YOU', file: 'src/audio/2026/Set My Sites On YOU.mp3', artist: 'ACID Love', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/ACID Love_Set My Sites On YOU.PNG' }, 
+    { title: 'Addicted To Your Poison', file: 'src/audio/2026/Addicted To Your Poison.mp3', artist: 'ACID Love', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/ACID Love_Addicted To Your Poison.PNG' },
 ];
 
 // --- ★★★ 新規追加：プロフィールデータベース ★★★ ---
