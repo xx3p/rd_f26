@@ -237,6 +237,53 @@ button {
     box-shadow: 0 4px 8px rgba(25, 28, 79, 0.2); /* ★ 青い影 */
 }
 
+.lyrics-toggle {
+    display: block;
+    width: 100%;
+    max-width: 350px;
+    margin: 16px auto 0;
+    padding: 10px 20px;
+    border: 1px solid #191C4F;
+    border-radius: 6px;
+    background-color: transparent;
+    color: #191C4F;
+    font-family: "Noto Sans JP", sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.lyrics-toggle:hover {
+    background-color: #191C4F;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(25, 28, 79, 0.2);
+}
+
+.lyrics-panel {
+    width: 100%;
+    max-width: 350px;
+    margin: 12px auto 0;
+    padding: 16px 18px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    text-align: left;
+    line-height: 1.8;
+    color: #333;
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+.lyrics-panel p {
+    margin: 0 0 0.7em;
+}
+
+.lyrics-panel p:last-child {
+    margin-bottom: 0;
+}
+
 /* ★ 再生中のボタンスタイル (★ 水色に変更) */
 .music-button.playing {
     background-color: #4a69bd; /* ★ 再生中の色は水色 */

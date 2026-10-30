@@ -5,14 +5,14 @@
 // Category = B は、自由曲。
 const allMusicData = [
     // しゅうへい
-    { title: 'おもいでフィルム', file: 'src/audio/2026/おもいでフィルム.mp3', artist: 'しゅうへい', category: 'A', volume: 1.0, jacket: 'src/images/jacket2026/しゅうへい_おもいでフィルム.PNG' },
-    { title: '爆食', file: 'src/audio/2026/爆食.mp3', artist: 'しゅうへい', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/しゅうへい_爆食.PNG' }, 
+    { title: 'おもいでフィルム', file: 'src/audio/2026/おもいでフィルム.mp3', artist: 'しゅうへい', category: 'A', volume: 1.0, jacket: 'src/images/jacket2026/しゅうへい_おもいでフィルム.PNG', lyricsFile: 'src/lyrics/おもいでフィルム.txt' },
+    { title: '爆食', file: 'src/audio/2026/爆食.mp3', artist: 'しゅうへい', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/しゅうへい_爆食.PNG', lyricsFile: 'src/lyrics/爆食.txt' }, 
 
     // 439K
     { title: '439K Trinitas', file: 'src/audio/2026/439K_Trinitas.mp3', artist: '439K', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/439K_Trinitas.png' },
 
     // あっしー
-    { title: 'リミナル feat.音街ウナ', file: 'src/audio/2026/リミナル feat.音街ウナ.mp3', artist: 'midoro', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/あっしー_リミナル.png' },
+    { title: 'リミナル feat.音街ウナ', file: 'src/audio/2026/リミナル feat.音街ウナ.mp3', artist: 'midoro', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/あっしー_リミナル.png', lyricsFile: 'src/lyrics/リミナル.txt' },
 
     // 西谷
     { title: '暮れなずめ黄昏', file: 'src/audio/2026/GLOSSUM.mp3', artist: 'たにし', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/GLOSSUM.jpeg' },
@@ -29,6 +29,8 @@ const allMusicData = [
 
     { title: 'Set My Sites On YOU', file: 'src/audio/2026/Set My Sites On YOU.mp3', artist: 'ACID Love', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/ACID Love_Set My Sites On YOU.PNG' }, 
     { title: 'Addicted To Your Poison', file: 'src/audio/2026/Addicted To Your Poison.mp3', artist: 'ACID Love', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/ACID Love_Addicted To Your Poison.PNG' },
+    // 歌詞を表示したい曲は、次のように追加してください
+    // { title: '曲名', file: 'src/audio/曲.mp3', artist: 'アーティスト', category: 'B', volume: 1.0, jacket: 'src/images/...png', lyricsFile: 'src/lyrics/～.txt' },
 ];
 
 // --- ★★★ 新規追加：プロフィールデータベース ★★★ ---
@@ -138,6 +140,99 @@ function shuffleArray(array) {
     return newArray;
 }
 
+function escapeHtml(value) {
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function formatLyrics(lyrics) {
+    if (!lyrics) return '';
+
+    const lyricLines = Array.isArray(lyrics) ? lyrics : [lyrics];
+    return lyricLines
+        .map((line) => `<p>${escapeHtml(line).replace(/\n/g, '<br>')}</p>`)
+        .join('');
+}
+
+function attachLyricsToggle(itemElement, music) {
+    const lyricsToggle = itemElement.querySelector('.lyrics-toggle');
+    const lyricsPanel = itemElement.querySelector('.lyrics-panel');
+
+    if (!lyricsToggle || !lyricsPanel) return;
+
+    if (lyricsToggle.dataset.bound === 'true') {
+        return;
+    }
+
+    lyricsToggle.onclick = null;
+    lyricsToggle.onpointerdown = null;
+    lyricsToggle.onmouseup = null;
+    lyricsToggle.dataset.bound = 'true';
+    lyricsToggle.dataset.open = 'false';
+    lyricsToggle.dataset.loading = 'false';
+    lyricsPanel.dataset.open = 'false';
+    lyricsPanel.hidden = true;
+
+    const renderLyrics = (text) => {
+        const lines = (text || '').split(/\r?\n/).filter(line => line.trim() !== '');
+        lyricsPanel.innerHTML = lines.length > 0
+            ? lines.map(line => `<p>${escapeHtml(line)}</p>`).join('')
+            : '<p>歌詞を読み込めませんでした。</p>';
+    };
+
+    const setLyricsState = (open) => {
+        lyricsPanel.hidden = !open;
+        lyricsPanel.dataset.open = String(open);
+        lyricsToggle.dataset.open = String(open);
+        lyricsToggle.setAttribute('aria-expanded', String(open));
+        lyricsToggle.textContent = open ? '歌詞を閉じる' : 'この曲の歌詞';
+    };
+
+    const loadLyrics = async () => {
+        if (!music.lyricsFile || lyricsPanel.dataset.loaded === 'true') {
+            return;
+        }
+
+        const url = new URL(music.lyricsFile, window.location.href).toString();
+        const response = await fetch(url, { cache: 'no-store' });
+        if (!response.ok) {
+            throw new Error(`lyrics file not found: ${url}`);
+        }
+
+        const text = await response.text();
+        renderLyrics(text);
+        lyricsPanel.dataset.loaded = 'true';
+    };
+
+    lyricsToggle.addEventListener('click', async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (lyricsToggle.dataset.loading === 'true') {
+            return;
+        }
+
+        const nextOpenState = lyricsToggle.dataset.open !== 'true';
+        lyricsToggle.dataset.loading = 'true';
+
+        try {
+            if (music.lyricsFile) {
+                await loadLyrics();
+            }
+        } catch (error) {
+            console.error('[lyrics error]', music.title, error);
+            lyricsPanel.innerHTML = '<p>歌詞を読み込めませんでした。</p>';
+        } finally {
+            setLyricsState(nextOpenState);
+            lyricsToggle.dataset.loading = 'false';
+        }
+    });
+}
+
 // --- ★ 楽曲アイテムのHTML(DOM)を生成する関数 (変更) ---
 function createMusicItem(music) {
     const jacketStyle = music.jacket
@@ -149,23 +244,39 @@ function createMusicItem(music) {
         ? '<span class="jacket-placeholder"></span>'
         : '';
 
+    const lyricLines = Array.isArray(music.lyrics) ? music.lyrics : (typeof music.lyrics === 'string' ? [music.lyrics] : []);
+    const hasLyrics = Boolean(music.lyricsFile || lyricLines.length > 0);
+    const lyricContent = hasLyrics ? `
+        <button class="lyrics-toggle" type="button" aria-expanded="false">この曲の歌詞</button>
+        <div class="lyrics-panel" hidden>
+            ${music.lyricsFile ? '' : formatLyrics(lyricLines)}
+        </div>
+    ` : '';
+
     const itemHTML = `
-        <div class="music-item" data-artist="${music.artist}" data-category="${music.category}">
+        <div class="music-item" data-artist="${escapeHtml(music.artist)}" data-category="${escapeHtml(music.category)}">
             <div class="jacket-container" ${jacketStyle}>
                 ${placeholderHTML}
             </div>
-            <p class="song-title">${music.title}</p>
-            <p class="song-artist-credit">by ${music.artist}</p>
+            <p class="song-title">${escapeHtml(music.title)}</p>
+            <p class="song-artist-credit">by ${escapeHtml(music.artist)}</p>
             <button class="music-button">再生</button>
+            ${lyricContent}
             <audio controls hidden="true" data-volume="${music.volume || 1.0}">
-                <source src="${music.file}" type="audio/mpeg">
+                <source src="${escapeHtml(music.file)}" type="audio/mpeg">
                 Your browser does not support the audio element.
             </audio>
         </div>
     `;
     const template = document.createElement('template');
     template.innerHTML = itemHTML.trim();
-    return template.content.firstChild;
+    const item = template.content.firstChild;
+
+    if (hasLyrics) {
+        attachLyricsToggle(item, music);
+    }
+
+    return item;
 }
 
 // --- ★★★ 新規追加：プロフィールアイテムのHTML(DOM)を生成する関数 ★★★ ---
@@ -288,6 +399,18 @@ function activateSong(songData, isRandom = false) {
 // --- 再生ボタンのイベントリスナーを設定する関数 (修正) ---
 function initializeMusicButtons() {
     document.querySelectorAll('#music-segment .music-item').forEach(item => {
+        const lyricsToggle = item.querySelector('.lyrics-toggle');
+        const lyricsPanel = item.querySelector('.lyrics-panel');
+
+        if (lyricsToggle && lyricsPanel) {
+            lyricsToggle.addEventListener('click', () => {
+                const isHidden = lyricsPanel.hasAttribute('hidden');
+                lyricsPanel.hidden = !isHidden;
+                lyricsToggle.setAttribute('aria-expanded', String(isHidden));
+                lyricsToggle.textContent = isHidden ? '歌詞を閉じる' : 'この曲の歌詞';
+            });
+        }
+
         const button = item.querySelector('.music-button');
         
         button.addEventListener('click', function () {
