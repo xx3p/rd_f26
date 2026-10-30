@@ -8,6 +8,9 @@ const allMusicData = [
     { title: 'おもいでフィルム', file: 'src/audio/2026/おもいでフィルム.mp3', artist: 'しゅうへい', category: 'A', volume: 1.0, jacket: 'src/images/jacket2026/しゅうへい_おもいでフィルム.PNG', lyricsFile: 'src/lyrics/おもいでフィルム.txt' },
     { title: '爆食', file: 'src/audio/2026/爆食.mp3', artist: 'しゅうへい', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/しゅうへい_爆食.PNG', lyricsFile: 'src/lyrics/爆食.txt' }, 
 
+    // ねむ
+    { title: '逆桜', file: 'src/audio/2026/ユメミシロ_sakasakura.wav', artist: 'ユメミシロ', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/ユメミシロ_sakasakura.png' },
+
     // 439K
     { title: '439K Trinitas', file: 'src/audio/2026/439K_Trinitas.mp3', artist: '439K', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/439K_Trinitas.png' },
 
