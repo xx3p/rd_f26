@@ -30,7 +30,7 @@ const allMusicData = [
     { title: 'Inflict Infinity Damage!!!', file: 'src/audio/2026/Inflict Infinity Damage!!!.mp3', artist: '8×million bit', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/8×million bit_Inflict Infinity Damage!!!.PNG' }, 
     { title: 'Lovely Invader<3', file: 'src/audio/2026/Lovely Invader.mp3', artist: '8×million bit', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/8×million bit_Lovely Invader_3.PNG' }, 
 
-    { title: 'Set My Sites On YOU', file: 'src/audio/2026/Set My Sites On YOU.mp3', artist: 'ACID Love', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/ACID Love_Set My Sites On YOU.PNG' }, 
+    { title: 'Set My Sites On YOU', file: 'src/audio/2026/Set My Sites on YOU.mp3', artist: 'ACID Love', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/ACID Love_Set My Sites On YOU.PNG' }, 
     { title: 'Addicted To Your Poison', file: 'src/audio/2026/Addicted To Your Poison.mp3', artist: 'ACID Love', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/ACID Love_Addicted To Your Poison.PNG' },
     // 歌詞を表示したい曲は、次のように追加してください
     // { title: '曲名', file: 'src/audio/曲.mp3', artist: 'アーティスト', category: 'B', volume: 1.0, jacket: 'src/images/...png', lyricsFile: 'src/lyrics/～.txt' },
