@@ -30,7 +30,7 @@ const allMusicData = [
     { title: 'Inflict Infinity Damage!!!', file: 'src/audio/2026/Inflict Infinity Damage!!!.mp3', artist: '8×million bit', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/8×million bit_Inflict Infinity Damage!!!.PNG' }, 
     { title: 'Lovely Invader<3', file: 'src/audio/2026/Lovely Invader.mp3', artist: '8×million bit', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/8×million bit_Lovely Invader_3.PNG' }, 
 
-    { title: 'Set My Sites On YOU', file: 'src/audio/2026/Set My Sites on YOU.mp3', artist: 'ACID Love', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/ACID Love_Set My Sites On YOU.PNG' }, 
+    { title: 'Set My Sites on YOU', file: 'src/audio/2026/Set My Sites on YOU.mp3', artist: 'ACID Love', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/ACID Love_Set My Sites On YOU.PNG' }, 
     { title: 'Addicted To Your Poison', file: 'src/audio/2026/Addicted To Your Poison.mp3', artist: 'ACID Love', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/ACID Love_Addicted To Your Poison.PNG' },
     // 歌詞を表示したい曲は、次のように追加してください
     // { title: '曲名', file: 'src/audio/曲.mp3', artist: 'アーティスト', category: 'B', volume: 1.0, jacket: 'src/images/...png', lyricsFile: 'src/lyrics/～.txt' },
@@ -150,6 +150,33 @@ function escapeHtml(value) {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
+}
+
+function isMobilePlaybackRestricted() {
+    return window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+}
+
+async function safePlayAudio() {
+    try {
+        const playPromise = audio.play();
+        if (playPromise && typeof playPromise.then === 'function') {
+            await playPromise;
+        }
+        playButton.querySelector('img').src = 'src/bar/pause.png';
+        return true;
+    } catch (error) {
+        console.warn('Audio playback was blocked by the browser:', error);
+        playButton.querySelector('img').src = 'src/bar/play.png';
+        return false;
+    }
+}
+
+function prepareSongPlayback(songData, isRandom = false, autoPlay = true) {
+    activateSong(songData, isRandom);
+
+    if (autoPlay && !isMobilePlaybackRestricted()) {
+        safePlayAudio();
+    }
 }
 
 function formatLyrics(lyrics) {
@@ -386,7 +413,6 @@ function activateSong(songData, isRandom = false) {
     audio.addEventListener('loadeddata', () => {
         const songVolume = parseFloat(songData.volume) || 1.0;
         audio.volume = songVolume;
-        audio.play();
     }, { once: true });
 
     // 再生時間やシークバーの初期化
@@ -430,7 +456,7 @@ function initializeMusicButtons() {
                         randomPlayButton.textContent = '一時停止中（他の楽曲を再生）';
                     }
                 } else {
-                    audio.play();
+                    safePlayAudio();
                     button.textContent = '再生中';
                     playButton.querySelector('img').src = 'src/bar/pause.png';
                     
@@ -461,7 +487,7 @@ function initializeMusicButtons() {
             );
             
             if (songData) {
-                activateSong(songData, false); // isRandom = false
+                prepareSongPlayback(songData, false, true);
             }
         });
     });
@@ -498,7 +524,7 @@ function startThemePlay(musicList, buttonElement) {
     
     // ★ 選択された曲を再生
     const songData = currentPlaylist[currentTrackIndex];
-    activateSong(songData, true); // isRandom = true
+    prepareSongPlayback(songData, true, true);
 }
 
 // --- ★ 開閉ヘッダーのロジック (変更) ---
@@ -546,7 +572,9 @@ audio.addEventListener('ended', () => {
     if (isRepeating) {
         // 1. リピートモード
         audio.currentTime = 0;
-        audio.play();
+        if (!isMobilePlaybackRestricted()) {
+            safePlayAudio();
+        }
     } else if (isThemeShufflePlaying) {
         // 2. ランダム再生中
         currentTrackIndex++;
@@ -555,6 +583,14 @@ audio.addEventListener('ended', () => {
         }
         const nextSongData = currentPlaylist[currentTrackIndex];
         activateSong(nextSongData, true); // isRandom = true
+
+        // モバイルでは、ユーザー操作外の自動再生はブロックされやすいため次曲の再生を待機する
+        if (!isMobilePlaybackRestricted()) {
+            safePlayAudio();
+        } else {
+            audio.pause();
+            playButton.querySelector('img').src = 'src/bar/play.png';
+        }
 
     } else {
         // 3. 通常再生終了
@@ -576,12 +612,14 @@ seekBar.addEventListener('input', () => {
 });
 
 // 再生ボタンの制御 (修正)
-playButton.addEventListener('click', () => {
+playButton.addEventListener('click', async () => {
     if (audio.src === "") return; // まだ曲が選択されていない場合は何もしない
 
     if (audio.paused) {
-        audio.play();
-        playButton.querySelector('img').src = 'src/bar/pause.png';
+        const resumed = await safePlayAudio();
+        if (!resumed) {
+            return;
+        }
     } else {
         audio.pause();
         playButton.querySelector('img').src = 'src/bar/play.png';
