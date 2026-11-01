@@ -20,6 +20,9 @@ const allMusicData = [
     // 西谷
     { title: '暮れなずめ黄昏', file: 'src/audio/2026/GLOSSUM.mp3', artist: 'たにし', category: 'B', volume: 1.0, jacket: 'src/images/jacket2026/GLOSSUM.jpeg' },
 
+    // まにょん
+    { title: 'スターライトエモーション', file: 'src/audio/2026/ユメミシロ & まにょん - スターライトエモーション.wav', artist: 'ユメミシロ & まにょん', category: 'A', volume: 1.0, jacket: 'src/images/jacket2026/ユメミシロ & まにょん - スターライトエモーション.png' },
+
     // IGC2のしゅうへい
     { title: 'JumpHero', file: 'src/audio/2026/JumpHero.mp3', artist: 'LegendaryGuitarHero', category: 'A', volume: 1.0, jacket: 'src/images/jacket2026/LegendaryGuitarHero_JumpHero.PNG' }, 
     { title: 'SeasideJourney', file: 'src/audio/2026/SeasideJourney.mp3', artist: 'LegendaryGuitarHero', category: 'A', volume: 1.0, jacket: 'src/images/jacket2026/LegendaryGuitarHero_SeasideJourney.PNG' }, 
